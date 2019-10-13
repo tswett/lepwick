@@ -151,7 +151,11 @@ LOGGING = {
 STATIC_URL = '/static/'
 
 
-# django_heroku
+# Other settings
 
+LOGIN_REDIRECT_URL = '/'
+
+
+# django_heroku
 
 django_heroku.settings(locals())
