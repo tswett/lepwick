@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <p>Hello, world. You are a colonist on Mars.</p>
+
+    {% if user.is_authenticated %}
+    <p>You are logged in as <b>{{ user.username }}</b>. You may <a href="/logout/">log out</a>.</p>
+    {% else %}
+    <p>You are not logged in. You may <a href="/login/">log in</a>.</p>
+    {% endif %}
+
+    <p>What do the other colonists have?</p>
+
+    <ul>
+        {% for holding in holdings %}
+        <li>{{ holding }}</li>
+        {% endfor %}
+    </ul>
+</html>
