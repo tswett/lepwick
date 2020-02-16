@@ -1,5 +1,6 @@
 from django.db.models import F
 from schedule import Scheduler
+import sys
 import threading
 import time
 
@@ -40,6 +41,7 @@ def run_continuously(self, interval=1):
 
 Scheduler.run_continuously = run_continuously
 
-scheduler = Scheduler()
-scheduler.every().second.do(give_admin_gold)
-scheduler.run_continuously()
+def start_scheduler():
+    scheduler = Scheduler()
+    scheduler.every().second.do(give_admin_gold)
+    scheduler.run_continuously()
