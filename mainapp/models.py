@@ -20,7 +20,7 @@ class UserInventory(models.Model):
 class UserHolding(models.Model):
     inventory = models.ForeignKey(UserInventory, on_delete=models.CASCADE)
     commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
-    amount = models.BigIntegerField(validators=[MinValueValidator(0)])
+    amount = models.BigIntegerField(validators=[MinValueValidator(0)], default=0)
 
     def __str__(self):
         username = self.inventory.user.username
@@ -43,12 +43,8 @@ class CommodityOutput(models.Model):
         for parent_holding in parent_holdings:
             parent_amount = parent_holding.amount
 
-            #result_holding, created = UserHolding.objects.get_or_create(
-            #    inventory=parent_holding.inventory, commodity=self.result)
+            UserHolding.objects.get_or_create(
+                inventory=parent_holding.inventory, commodity=self.result)
 
-            #result_holding.update(amount=F('amount') + parent_amount * self.quantity)
-
-            UserHolding.objects.update_or_create(
-                inventory=parent_holding.inventory, commodity=self.result,
-                defaults={'amount': F('amount') + parent_amount * self.quantity}
-            )
+            (UserHolding.objects.filter(inventory=parent_holding.inventory, commodity=self.result)
+                .update(amount=F('amount') + parent_amount * self.quantity))
