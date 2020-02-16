@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import F
 
 class Commodity(models.Model):
     name = models.CharField(max_length=50)
@@ -26,3 +27,28 @@ class UserHolding(models.Model):
         amount = self.amount
         unit = self.commodity.minor_unit_plural
         return f'{username}: {amount} {unit}'
+
+class CommodityOutput(models.Model):
+    parent = models.ForeignKey(Commodity, on_delete=models.CASCADE)
+    result = models.ForeignKey(Commodity, on_delete=models.CASCADE,
+        related_name='commodity_output_parent')
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.parent.name} produces {self.quantity} of {self.result.name}'
+    
+    def produce(self):
+        parent_holdings = UserHolding.objects.filter(commodity=self.parent)
+
+        for parent_holding in parent_holdings:
+            parent_amount = parent_holding.amount
+
+            #result_holding, created = UserHolding.objects.get_or_create(
+            #    inventory=parent_holding.inventory, commodity=self.result)
+
+            #result_holding.update(amount=F('amount') + parent_amount * self.quantity)
+
+            UserHolding.objects.update_or_create(
+                inventory=parent_holding.inventory, commodity=self.result,
+                defaults={'amount': F('amount') + parent_amount * self.quantity}
+            )

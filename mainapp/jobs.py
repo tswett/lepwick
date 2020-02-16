@@ -4,13 +4,11 @@ import sys
 import threading
 import time
 
-from .models import UserHolding
+from .models import CommodityOutput
 
-def give_admin_gold():
-    admin_gold_holding = (UserHolding.objects
-        .filter(inventory__user__username='admin', commodity__name='gold'))
-    
-    admin_gold_holding.update(amount=F('amount') + 1)
+def do_commodity_outputs():
+    for commodity_output in CommodityOutput.objects.all():
+        commodity_output.produce()
 
 def run_continuously(self, interval=1):
     """Continuously run, while executing pending jobs at each elapsed
@@ -43,5 +41,5 @@ Scheduler.run_continuously = run_continuously
 
 def start_scheduler():
     scheduler = Scheduler()
-    scheduler.every().second.do(give_admin_gold)
+    scheduler.every().minute.do(do_commodity_outputs)
     scheduler.run_continuously()
