@@ -1,8 +1,10 @@
 from django.contrib import admin
 
-from .models import Commodity, UserHolding, UserInventory, CommodityOutput
+from . import models
 
-admin.site.register(Commodity)
-admin.site.register(UserHolding)
-admin.site.register(UserInventory)
-admin.site.register(CommodityOutput)
+admin.site.register(models.Commodity)
+admin.site.register(models.UserHolding)
+admin.site.register(models.UserInventory)
+admin.site.register(models.CommodityOutput)
+admin.site.register(models.Recipe)
+admin.site.register(models.RecipeItem)
