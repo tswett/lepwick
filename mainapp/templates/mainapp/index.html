@@ -15,4 +15,22 @@
         <li>{{ holding }}</li>
         {% endfor %}
     </ul>
+
+    <p>What can you do with the items you have?</p>
+
+    <form method="post" action="do_recipe">
+        {% csrf_token %}
+        <ul>
+            {% for recipe in recipes %}
+            <li>
+                <button type="submit" name="recipe" value="{{ recipe.id }}">{{ recipe }}</button>
+                <ul>
+                    {% for item in recipe.items.all %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </form>
 </html>
